@@ -8,6 +8,12 @@
     "eject": "expo eject",
     "test": "jest --watchAll"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
   "jest": {
     "preset": "jest-expo"
   },
@@ -28,8 +34,19 @@
     "react-navigation": "^3.11.0"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.1.0",
+    "@commitlint/config-conventional": "^8.1.0",
     "babel-preset-expo": "^6.0.0",
-    "jest-expo": "^34.0.0"
+    "husky": "^3.0.3",
+    "jest-expo": "^34.0.0",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1",
+    "standard-version": "^7.0.0"
   },
-  "private": true
+  "private": true,
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
 }
