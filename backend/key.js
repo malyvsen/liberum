@@ -1,1 +1,0 @@
-// na razie niepotrzebne

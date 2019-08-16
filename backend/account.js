@@ -1,20 +1,16 @@
 export default class Account {
-  constructor(name, publicKey, links) {
+  constructor(name, publicKey, connections = []) {
     this.name = name;
     this.publicKey = publicKey;
-    this.links = links || [];
+    this.connections = connections;
   }
-  getTrustOf(account) {
-    return account;
-  }
+  getTrustOf = async account => {
+    return account.connections.length / (account.connections.length + 1);
+  };
   iterateAccounts() {
-    return [];
+    return []; // TODO
   }
-  addLink(link) {
-    return [link];
-  }
+  connect = async connection => {
+    this.connections.push(connection); // TODO
+  };
 }
-
-/* testing */
-// const newAccount = new Account("malyvsen", "AAAA-BBBB-CCCC");
-// console.log(newAccount);
