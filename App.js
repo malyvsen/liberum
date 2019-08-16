@@ -1,14 +1,25 @@
-import { AppLoading } from "expo";
-import { Asset } from "expo-asset";
-import * as Font from "expo-font";
-import React, { useState } from "react";
-import { Platform, StatusBar, StyleSheet, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
+import { AppLoading } from "expo";
+import * as Font from "expo-font";
+import React, { useState, createContext, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import AppNavigator from "./navigation/AppNavigator";
+import Graph from "./backend/graph";
+import Account from "./backend/account";
+
+export const GraphContext = createContext(null);
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);
+  const [graph, setGraph] = useState(null);
+
+  useEffect(() => {
+    const newGraph = new Graph();
+    const newAccount = new Account("createdAccount", "AAAAAAAAAAAA");
+    newGraph.logIn(newAccount, "AAAAAAAAAAAA").then(() => {
+      setGraph(newGraph);
+    });
+  }, []);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
     return (
@@ -21,8 +32,9 @@ export default function App(props) {
   } else {
     return (
       <View style={styles.container}>
-        {/* {Platform.OS === "ios" && <StatusBar barStyle="default" />} */}
-        <AppNavigator />
+        <GraphContext.Provider value={graph}>
+          <AppNavigator />
+        </GraphContext.Provider>
       </View>
     );
   }
@@ -30,10 +42,6 @@ export default function App(props) {
 
 async function loadResourcesAsync() {
   await Promise.all([
-    Asset.loadAsync([
-      require("./assets/images/robot-dev.png"),
-      require("./assets/images/robot-prod.png")
-    ]),
     Font.loadAsync({
       // This is the font that we are using for our tab bar
       ...Ionicons.font,
