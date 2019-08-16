@@ -3,13 +3,16 @@ import { keyPair } from "./crypto";
 export default class Graph {
   constructor(savePath) {
     this.accounts = savePath || []; // TODO: load data from save
-    this.currentAccount = null; // TODO: make this read-only
+    this.currentAccount = "defaultAccount"; // TODO: make this read-only
   }
   logIn = async (account, password) => {
     const newKeyPair = await keyPair(password);
-    assert(newKeyPair.publicKey == account.publicKey);
-    this.currentAccount = account;
-    this.currentAccount.privateKey = newKeyPair.privateKey;
+    if (newKeyPair.publicKey == account.publicKey) {
+      this.currentAccount = account;
+      this.currentAccount.privateKey = newKeyPair.privateKey;
+    } else {
+      throw new Error("keys don't match!");
+    }
   };
   syncWith = async account => {
     console.log("syncing with " + account.name); // TODO
