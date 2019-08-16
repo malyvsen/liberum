@@ -1,78 +1,75 @@
-import React from 'react';
-import { Platform } from 'react-native';
-import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
+import React from "react";
+import { Platform } from "react-native";
+import {
+  createStackNavigator,
+  createBottomTabNavigator
+} from "react-navigation";
 
-import TabBarIcon from '../components/TabBarIcon';
-import HomeScreen from '../screens/HomeScreen';
-import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import TabBarIcon from "../components/TabBarIcon";
+import ConnectScreen from "../screens/ConnectScreen";
+import YouScreen from "../screens/YouScreen";
+import VerificationScreen from "../screens/VerificationScreen";
 
 const config = Platform.select({
-  web: { headerMode: 'screen' },
-  default: {},
+  web: { headerMode: "screen" },
+  default: {}
 });
 
-const HomeStack = createStackNavigator(
+const ConnectStack = createStackNavigator(
   {
-    Home: HomeScreen,
+    Connect: ConnectScreen
   },
   config
 );
 
-HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon
-      focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
-    />
-  ),
+ConnectStack.navigationOptions = {
+  tabBarLabel: "Connect",
+  tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name={"link"} />
 };
 
-HomeStack.path = '';
+ConnectStack.path = "";
 
-const LinksStack = createStackNavigator(
+const YouStack = createStackNavigator(
   {
-    Links: LinksScreen,
+    You: YouScreen
   },
   config
 );
 
-LinksStack.navigationOptions = {
-  tabBarLabel: 'Links',
-  tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-link' : 'md-link'} />
-  ),
+YouStack.navigationOptions = {
+  tabBarLabel: "You",
+  tabBarIcon: ({ focused }) => <TabBarIcon focused={focused} name={"user"} />
 };
 
-LinksStack.path = '';
+YouStack.path = "";
 
-const SettingsStack = createStackNavigator(
+const VerificationStack = createStackNavigator(
   {
-    Settings: SettingsScreen,
+    Verification: VerificationScreen
   },
   config
 );
 
-SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
+VerificationStack.navigationOptions = {
+  tabBarLabel: "Verification",
   tabBarIcon: ({ focused }) => (
-    <TabBarIcon focused={focused} name={Platform.OS === 'ios' ? 'ios-options' : 'md-options'} />
-  ),
+    <TabBarIcon focused={focused} name={"check-circle"} />
+  )
 };
 
-SettingsStack.path = '';
+VerificationStack.path = "";
 
-const tabNavigator = createBottomTabNavigator({
-  HomeStack,
-  LinksStack,
-  SettingsStack,
-});
+const tabNavigator = createBottomTabNavigator(
+  {
+    ConnectStack,
+    YouStack,
+    VerificationStack
+  },
+  {
+    initialRouteName: "YouStack"
+  }
+);
 
-tabNavigator.path = '';
+tabNavigator.path = "";
 
 export default tabNavigator;
