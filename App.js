@@ -1,13 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { AppLoading } from "expo";
 import * as Font from "expo-font";
-import React, { useState, createContext, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import AppNavigator from "./navigation/AppNavigator";
-import Graph from "./backend/graph";
 import Account from "./backend/account";
-
-export const GraphContext = createContext(null);
+import Graph from "./backend/graph";
+import GraphContext from "./GraphContext";
+import AppNavigator from "./navigation/AppNavigator";
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = useState(false);

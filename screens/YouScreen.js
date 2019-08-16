@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { View } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { BigMonoText, MonoText } from "../components/StyledText";
-import { GraphContext } from "../App";
+import GraphContext from "../GraphContext";
 
 export default function YouScreen() {
   const graph = useContext(GraphContext);
