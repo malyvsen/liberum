@@ -1,1 +1,5 @@
-export default GraphContext = createContext(null);
+import { createContext } from "react";
+
+const GraphContext = createContext(null);
+
+export default GraphContext;
