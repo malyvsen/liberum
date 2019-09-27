@@ -6,10 +6,10 @@ import GraphContext from "../GraphContext";
 
 export default function YouScreen() {
   const graph = useContext(GraphContext);
-  const { name, publicKey } = graph ? graph.currentAccount : null;
+  const { name, key } = graph ? graph.currentAccount : null;
 
-  // i think that's pretty cool
-  const formattedPublicKey = publicKey
+  const formattedPublicKey = key.publicKey
+    .slice(0, 12)
     .split("")
     .map((letter, index) => {
       return index !== 0 && (index + 1) % 4 === 0 ? letter + "-" : letter;

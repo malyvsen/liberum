@@ -14,8 +14,11 @@ export default function App(props) {
 
   useEffect(() => {
     const newGraph = new Graph();
-    const newAccount = new Account("createdAccount", "AAAAAAAAAAAA");
-    newGraph.logIn(newAccount, "AAAAAAAAAAAA").then(() => {
+    const newAccount = new Account(
+      "createdAccount",
+      "vzii6nDeIs+SWbsZUujf/SBgGs0DpQi0OA+weJu+TZ+tKrFdp9LagXbUYkjansbtGmyaWcej5DOwj+eZd9l1Avibbh0eHZ7gEc/bN+BpwYYikbjNFE95Z/wxpl4skLypiChUPxAmOAiC21V28vNTbAMZyr+yO5jyCDu3/rJglaL1FV77BVnxep8bJ7h/mvH55IgkZN1ZBgG5P8/Or1DWWxQMxRCiuukK5JlV/NMGI/GgV0SGTdSqKEUa6IJ0z3iSyvug4PSs0oOKZcBip3WdqJdZytA1Fcn9zXaR/p7/C3gQFFkdYfYNA9o5m1vrU7Z1cB7U+YXbkRu0T9GqY6MIvw=="
+    );
+    newGraph.logIn(newAccount, "testPassword").then(() => {
       setGraph(newGraph);
     });
   }, []);
