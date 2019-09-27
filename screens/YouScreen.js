@@ -9,10 +9,10 @@ export default function YouScreen() {
   const { name, key } = graph ? graph.currentAccount : null;
 
   const formattedPublicKey = key.publicKey
-    .slice(0, 12)
+    .slice(0, 16)
     .split("")
     .map((letter, index) => {
-      return index !== 0 && (index + 1) % 4 === 0 ? letter + "-" : letter;
+      return index !== 0 && (index + 1) % 4 === 0 ? letter + " " : letter;
     })
     .join("")
     .split("")
