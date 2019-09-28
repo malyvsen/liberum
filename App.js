@@ -16,9 +16,9 @@ export default function App(props) {
     const newGraph = new Graph();
     const newAccount = new Account(
       "createdAccount",
-      "vzii6nDeIs+SWbsZUujf/SBgGs0DpQi0OA+weJu+TZ+tKrFdp9LagXbUYkjansbtGmyaWcej5DOwj+eZd9l1Avibbh0eHZ7gEc/bN+BpwYYikbjNFE95Z/wxpl4skLypiChUPxAmOAiC21V28vNTbAMZyr+yO5jyCDu3/rJglaL1FV77BVnxep8bJ7h/mvH55IgkZN1ZBgG5P8/Or1DWWxQMxRCiuukK5JlV/NMGI/GgV0SGTdSqKEUa6IJ0z3iSyvug4PSs0oOKZcBip3WdqJdZytA1Fcn9zXaR/p7/C3gQFFkdYfYNA9o5m1vrU7Z1cB7U+YXbkRu0T9GqY6MIvw=="
+      "hGsN2fJJOCqbM8eZsrJzBbLGYMhUIWMe5gQcpuSRaMr/3mJr/6ZfmpYNGdX2iwS/b295D0lE0y5Eqs24AK3jmjb/3mqyhrP64r6YN/umduFRTutqL+xZHsMP5TTjgv8CzFwzlqGO267ZJ4XT9kJ5oeIHUaVWdz1jHQ3PPZaTRgGgGWhILWoGPkLJ3CKukIPaHP4jJxYnOTx6EB01Ain24BMcGHqV21Ptvwcl3kmoQsOQ9iUZGh1RKkJe4RQm1JSPBvn8S6wz0oWELAVxsHBs13y0ZBHZZDcDwo46CW0cfI4+/sXI4SOQRkpwpoVzYB4u4FMvTQiPQ+UxQ7O9GG5X9Q=="
     );
-    newGraph.logIn(newAccount, "testPassword").then(() => {
+    newGraph.logIn(newAccount, "Here we go!").then(() => {
       setGraph(newGraph);
     });
   }, []);

@@ -8,7 +8,7 @@ export default class Graph {
 
   logIn = async (account, password) => {
     const keyFromPassword = new Key();
-    keyFromPassword.generate(password);
+    await keyFromPassword.generate(password);
     if (keyFromPassword.publicKey == account.key.publicKey) {
       this.currentAccount = account;
       this.currentAccount.key = keyFromPassword;
