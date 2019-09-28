@@ -659,7 +659,7 @@ var MD5 = function(string) {
 };
 
 // Depends on jsbn.js and rng.js
-// Version 1.1: support utf-8 encoding in pkcs1pad2
+// Version 1.1: support utf-8 encoding in pkcs1pad2 (which has been deleted in last-id)
 // convert a (hex) string to a bignum object
 
 function parseBigInt(str, r) {
@@ -681,46 +681,7 @@ function byte2Hex(b) {
   else return b.toString(16);
 }
 
-// PKCS#1 (type 2, random) pad input string s to n bytes, and return a bigint
-
-function pkcs1pad2(s, n, rng) {
-  if (n < s.length + 11) {
-    // TODO: fix for utf-8
-    //alert("Message too long for RSA (n=" + n + ", l=" + s.length + ")");
-    //return null;
-    throw "Message too long for RSA (n=" + n + ", l=" + s.length + ")";
-  }
-  var ba = new Array();
-  var i = s.length - 1;
-  while (i >= 0 && n > 0) {
-    var c = s.charCodeAt(i--);
-    if (c < 128) {
-      // encode using utf-8
-      ba[--n] = c;
-    } else if (c > 127 && c < 2048) {
-      ba[--n] = (c & 63) | 128;
-      ba[--n] = (c >> 6) | 192;
-    } else {
-      ba[--n] = (c & 63) | 128;
-      ba[--n] = ((c >> 6) & 63) | 128;
-      ba[--n] = (c >> 12) | 224;
-    }
-  }
-  ba[--n] = 0;
-  var x = new Array();
-  while (n > 2) {
-    // random non-zero pad
-    x[0] = 0;
-    while (x[0] == 0) rng.nextBytes(x);
-    ba[--n] = x[0];
-  }
-  ba[--n] = 2;
-  ba[--n] = 0;
-  return new BigInteger(ba);
-}
-
 // "empty" RSA key constructor
-
 function RSAKey() {
   this.n = null;
   this.e = 0;
@@ -731,8 +692,8 @@ function RSAKey() {
   this.dmq1 = null;
   this.coeff = null;
 }
-// Set the public key fields N and e from hex strings
 
+// Set the public key fields N and e from hex strings
 function RSASetPublic(N, E) {
   if (N != null && E != null && N.length > 0 && E.length > 0) {
     this.n = parseBigInt(N, 16);
@@ -751,35 +712,6 @@ RSAKey.prototype.doPublic = RSADoPublic;
 
 // public
 RSAKey.prototype.setPublic = RSASetPublic;
-
-// Version 1.1: support utf-8 decoding in pkcs1unpad2
-// Undo PKCS#1 (type 2, random) padding and, if valid, return the plaintext
-
-function pkcs1unpad2(d, n) {
-  var b = d.toByteArray();
-  var i = 0;
-  while (i < b.length && b[i] == 0) ++i;
-  if (b.length - i != n - 1 || b[i] != 2) return null;
-  ++i;
-  while (b[i] != 0) if (++i >= b.length) return null;
-  var ret = "";
-  while (++i < b.length) {
-    var c = b[i] & 255;
-    if (c < 128) {
-      // utf-8 decode
-      ret += String.fromCharCode(c);
-    } else if (c > 191 && c < 224) {
-      ret += String.fromCharCode(((c & 31) << 6) | (b[i + 1] & 63));
-      ++i;
-    } else {
-      ret += String.fromCharCode(
-        ((c & 15) << 12) | ((b[i + 1] & 63) << 6) | (b[i + 2] & 63)
-      );
-      i += 2;
-    }
-  }
-  return ret;
-}
 
 // Set the private key fields N, e, and d from hex strings
 function RSASetPrivate(N, E, D) {
