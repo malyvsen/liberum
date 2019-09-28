@@ -10,14 +10,14 @@ export default class Key {
   };
 
   encrypt = async plaintext => {
-    return cryptico.encrypt(plaintext, this.publicKey);
+    return cryptico.encrypt(plaintext, this.publicKey).cipher;
   };
 
   decrypt = async ciphertext => {
     if (!this.crypticoKey) {
       throw new Error("cannot decrypt without private key");
     }
-    return cryptico.decrypt(ciphertext, this.crypticoKey);
+    return cryptico.decrypt(ciphertext, this.crypticoKey).plaintext;
   };
 
   #publicKey = null;
