@@ -616,7 +616,7 @@ function _rsasign_getHexPaddedDigestInfoForString(s, keySize) {
   return sPaddedMessageHex;
 }
 
-function _rsasign_signString(s, hashAlg) {
+function _rsasign_signString(s) {
   var hPM = _rsasign_getHexPaddedDigestInfoForString(s, this.n.bitLength());
   var biPaddedMessage = parseBigInt(hPM, 16);
   var biSign = this.doPrivate(biPaddedMessage);
