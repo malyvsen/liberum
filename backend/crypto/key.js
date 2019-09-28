@@ -9,15 +9,15 @@ export default class Key {
     this.crypticoKey = cryptico.generateRSAKey(password, bitLength);
   };
 
-  encrypt = async plaintext => {
-    return cryptico.encrypt(plaintext, this.publicKey).cipher;
-  };
-
-  decrypt = async ciphertext => {
+  sign = async plaintext => {
     if (!this.crypticoKey) {
       throw new Error("cannot decrypt without private key");
     }
-    return cryptico.decrypt(ciphertext, this.crypticoKey).plaintext;
+    return cryptico.sign(plaintext, this.crypticoKey);
+  };
+
+  verify = async (plaintext, signature) => {
+    return cryptico.verify(plaintext, signature, this.publicKey);
   };
 
   #publicKey = null;

@@ -22,29 +22,16 @@ test("different passwords give different public keys", () => {
   });
 });
 
-test("same plaintext gives different ciphertext", () => {
-  const key = new Key();
-  const plaintext = "Clear, legible plaintext";
-  return key.generate("Let's see!", 1024).then(() => {
-    return key.encrypt(plaintext).then(ciphertext => {
-      return key.encrypt(plaintext).then(differentCiphertext => {
-        expect(differentCiphertext).not.toBe(ciphertext);
-      });
-    });
-  });
-});
-
-test("encryption is reversible with same password", () => {
-  const key = new Key();
-  const sameKey = new Key();
+test("signatures can be verified using public key only", () => {
+  const signingKey = new Key();
+  const verifyingKey = new Key();
   const password = "Here we go!";
   const plaintext = "Clear, legible plaintext";
-  return key.generate(password, 1024).then(() => {
-    return sameKey.generate(password, 1024).then(() => {
-      return key.encrypt(plaintext).then(ciphertext => {
-        return sameKey.decrypt(ciphertext).then(decrypted => {
-          expect(decrypted).toBe(plaintext);
-        });
+  return signingKey.generate(password, 1024).then(() => {
+    verifyingKey.publicKey = signingKey.publicKey;
+    return signingKey.sign(plaintext).then(signature => {
+      return verifyingKey.verify(plaintext, signature).then(status => {
+        expect(status).toBe(true);
       });
     });
   });
