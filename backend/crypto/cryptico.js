@@ -595,29 +595,18 @@ RSAKey.prototype.generate = RSAGenerate;
 // 1024 /  256
 // 2048 /  512
 // 4096 / 1024
-// As for _RSASGIN_DIHEAD values for each hash algorithm, see PKCS#1 v2.1 spec (p38).
-var _RSASIGN_DIHEAD = [];
-_RSASIGN_DIHEAD["sha1"] = "3021300906052b0e03021a05000414";
-_RSASIGN_DIHEAD["sha256"] = "3031300d060960864801650304020105000420";
-//_RSASIGN_DIHEAD['md2'] = "3020300c06082a864886f70d020205000410";
-//_RSASIGN_DIHEAD['md5'] = "3020300c06082a864886f70d020505000410";
-//_RSASIGN_DIHEAD['sha384'] = "3041300d060960864801650304020205000430";
-//_RSASIGN_DIHEAD['sha512'] = "3051300d060960864801650304020305000440";
-var _RSASIGN_HASHHEXFUNC = [];
-_RSASIGN_HASHHEXFUNC["sha1"] = sha1.hex;
-_RSASIGN_HASHHEXFUNC["sha256"] = sha256.hex;
+const _RSASIGN_DIHEAD = "3031300d060960864801650304020105000420";
 
 // ========================================================================
 // Signature Generation
 // ========================================================================
 
-function _rsasign_getHexPaddedDigestInfoForString(s, keySize, hashAlg) {
+function _rsasign_getHexPaddedDigestInfoForString(s, keySize) {
   var pmStrLen = keySize / 4;
-  var hashFunc = _RSASIGN_HASHHEXFUNC[hashAlg];
-  var sHashHex = hashFunc(s);
+  var sHashHex = sha256.hex(s);
 
   var sHead = "0001";
-  var sTail = "00" + _RSASIGN_DIHEAD[hashAlg] + sHashHex;
+  var sTail = "00" + _RSASIGN_DIHEAD + sHashHex;
   var sMid = "";
   var fLen = pmStrLen - sHead.length - sTail.length;
   for (var i = 0; i < fLen; i += 2) {
@@ -643,51 +632,9 @@ function _rsasign_signString(s, hashAlg) {
 // Signature Verification
 // ========================================================================
 
-function _rsasign_getDecryptSignatureBI(biSig, hN, hE) {
-  var rsa = new RSAKey();
-  rsa.setPublic(hN, hE);
-  var biDecryptedSig = rsa.doPublic(biSig);
-  return biDecryptedSig;
-}
-
-function _rsasign_getHexDigestInfoFromSig(biSig, hN, hE) {
-  var biDecryptedSig = _rsasign_getDecryptSignatureBI(biSig, hN, hE);
-  var hDigestInfo = biDecryptedSig.toString(16).replace(/^1f+00/, "");
-  return hDigestInfo;
-}
-
-function _rsasign_getAlgNameAndHashFromHexDisgestInfo(hDigestInfo) {
-  for (var algName in _RSASIGN_DIHEAD) {
-    var head = _RSASIGN_DIHEAD[algName];
-    var len = head.length;
-    if (hDigestInfo.substring(0, len) == head) {
-      var a = [algName, hDigestInfo.substring(len)];
-      return a;
-    }
-  }
-  return [];
-}
-
-function _rsasign_verifySignatureWithArgs(sMsg, biSig, hN, hE) {
-  var hDigestInfo = _rsasign_getHexDigestInfoFromSig(biSig, hN, hE);
-  var digestInfoAry = _rsasign_getAlgNameAndHashFromHexDisgestInfo(hDigestInfo);
-  if (digestInfoAry.length == 0) return false;
-  var algName = digestInfoAry[0];
-  var diHashValue = digestInfoAry[1];
-  var ff = _RSASIGN_HASHHEXFUNC[algName];
-  var msgHashValue = ff(sMsg);
-  return diHashValue == msgHashValue;
-}
-
-function _rsasign_verifyHexSignatureForMessage(hSig, sMsg) {
-  var biSig = parseBigInt(hSig, 16);
-  var result = _rsasign_verifySignatureWithArgs(
-    sMsg,
-    biSig,
-    this.n.toString(16),
-    this.e.toString(16)
-  );
-  return result;
+function _rsasign_getHashFromHexDisgestInfo(hDigestInfo) {
+  var len = _RSASIGN_DIHEAD.length;
+  return hDigestInfo.substring(len);
 }
 
 function _rsasign_verifyString(sMsg, hSig) {
@@ -695,27 +642,20 @@ function _rsasign_verifyString(sMsg, hSig) {
   var biSig = parseBigInt(hSig, 16);
   var biDecryptedSig = this.doPublic(biSig);
   var hDigestInfo = biDecryptedSig.toString(16).replace(/^1f+00/, "");
-  var digestInfoAry = _rsasign_getAlgNameAndHashFromHexDisgestInfo(hDigestInfo);
-
-  if (digestInfoAry.length == 0) return false;
-  var algName = digestInfoAry[0];
-  var diHashValue = digestInfoAry[1];
-  var ff = _RSASIGN_HASHHEXFUNC[algName];
-  var msgHashValue = ff(sMsg);
+  var diHashValue = _rsasign_getHashFromHexDisgestInfo(hDigestInfo);
+  var msgHashValue = sha256.hex(sMsg);
   return diHashValue == msgHashValue;
 }
 
 RSAKey.prototype.signString = _rsasign_signString;
-
 RSAKey.prototype.verifyString = _rsasign_verifyString;
-RSAKey.prototype.verifyHexSignatureForMessage = _rsasign_verifyHexSignatureForMessage;
 
 // Adapted for use in last-id from https://github.com/wwwtyro/cryptico
 // Cryptico could not be used as is because of security and dependency issues
 
 export default {
   sign: function(plaintext, key) {
-    return b16to64(key.signString(plaintext, "sha256"));
+    return b16to64(key.signString(plaintext));
   },
 
   verify: function(plaintext, signature, publicKeyString) {
