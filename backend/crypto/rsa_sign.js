@@ -31,6 +31,8 @@ const sha256 = require("js-sha256").sha256;
 import BigInteger from "./jsbn.js";
 import RSAKey from "./rsa_raw.js";
 
+export default RSAKey;
+
 const _RSASIGN_DIHEAD = "3031300d060960864801650304020105000420";
 
 // ========================================================================
@@ -81,5 +83,3 @@ function _rsasign_verifyString(sMsg, hSig) {
 
 RSAKey.prototype.signString = _rsasign_signString;
 RSAKey.prototype.verifyString = _rsasign_verifyString;
-
-export default RSAKey;
