@@ -639,30 +639,6 @@ function _rsasign_signString(s, hashAlg) {
   return hexSign;
 }
 
-function _rsasign_signStringWithSHA1(s) {
-  var hPM = _rsasign_getHexPaddedDigestInfoForString(
-    s,
-    this.n.bitLength(),
-    "sha1"
-  );
-  var biPaddedMessage = parseBigInt(hPM, 16);
-  var biSign = this.doPrivate(biPaddedMessage);
-  var hexSign = biSign.toString(16);
-  return hexSign;
-}
-
-function _rsasign_signStringWithSHA256(s) {
-  var hPM = _rsasign_getHexPaddedDigestInfoForString(
-    s,
-    this.n.bitLength(),
-    "sha256"
-  );
-  var biPaddedMessage = parseBigInt(hPM, 16);
-  var biSign = this.doPrivate(biPaddedMessage);
-  var hexSign = biSign.toString(16);
-  return hexSign;
-}
-
 // ========================================================================
 // Signature Verification
 // ========================================================================
@@ -730,8 +706,6 @@ function _rsasign_verifyString(sMsg, hSig) {
 }
 
 RSAKey.prototype.signString = _rsasign_signString;
-RSAKey.prototype.signStringWithSHA1 = _rsasign_signStringWithSHA1;
-RSAKey.prototype.signStringWithSHA256 = _rsasign_signStringWithSHA256;
 
 RSAKey.prototype.verifyString = _rsasign_verifyString;
 RSAKey.prototype.verifyHexSignatureForMessage = _rsasign_verifyHexSignatureForMessage;
