@@ -36,3 +36,22 @@ test("signatures can be verified using public key only", () => {
     });
   });
 });
+
+test("forged signature is identified as such", () => {
+  const signingKey = new Key();
+  const verifyingKey = new Key();
+  const password = "Moo";
+  const plaintext = "Text someone wants to mess with";
+  return signingKey.generate(password, 1024).then(() => {
+    verifyingKey.publicKey = signingKey.publicKey;
+    return signingKey.sign(plaintext).then(signature => {
+      const forgedSignature = signature
+        .split("")
+        .reverse()
+        .join("");
+      return verifyingKey.verify(plaintext, forgedSignature).then(status => {
+        expect(status).toBe(false);
+      });
+    });
+  });
+});
