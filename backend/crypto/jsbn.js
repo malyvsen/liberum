@@ -1,3 +1,6 @@
+// Adapted for use in last-id from https://github.com/wwwtyro/cryptico
+// Original comment follows
+
 // Copyright (c) 2005  Tom Wu
 // All Rights Reserved.
 // See "LICENSE" for details.
