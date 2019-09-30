@@ -97,7 +97,7 @@ function RSAGenerate(B, E, rng) {
 
 function guessRelativePrime(relativeTo, maxValue, rng) {
   for (;;) {
-    var result = bigInt.randBetween(0, maxValue, rng);
+    var result = primify(bigInt.randBetween(0, maxValue, rng));
     if (
       bigInt
         .gcd(result.subtract(bigInt.one), relativeTo)
@@ -106,6 +106,20 @@ function guessRelativePrime(relativeTo, maxValue, rng) {
     )
       return result;
   }
+}
+
+// makes a bigInt not divisible by 2 or 3
+// if the bigInt was to be rejected if it were divisible by 2 or 3, as is the case with guessRelativePrime,
+// primify does not affect the distribution from which bigInts are sampled
+function primify(value) {
+  var mask = 0;
+  if (value.isEven()) {
+    mask |= 1; // set the remainder by 2 to 1
+  }
+  if (value.mod(3).compareTo(bigInt.zero) == 0) {
+    mask |= 2 << (mask & 1); // randomly (50/50) pick a remainder by 3: 1 or 2
+  }
+  return value.xor(mask);
 }
 
 // Perform raw private operation on "x": return x^d (mod n)
