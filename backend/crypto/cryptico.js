@@ -1,5 +1,4 @@
 const seedrandom = require("seedrandom");
-import BigInteger, { int2char } from "./jsbn.js";
 import RSAKey from "./rsa_sign.js";
 
 // Adapted for use in last-id from https://github.com/wwwtyro/cryptico
@@ -91,4 +90,8 @@ function publicKeyFromString(string) {
   var rsa = new RSAKey();
   rsa.setPublic(N, E);
   return rsa;
+}
+
+function int2char(int) {
+  return "0123456789abcdefghijklmnopqrstuvwxyz".charAt(int);
 }

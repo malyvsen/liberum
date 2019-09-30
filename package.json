@@ -22,6 +22,7 @@
     "@expo/samples": "~3.0.3",
     "@expo/vector-icons": "^10.0.3",
     "@react-navigation/web": "^1.0.0-alpha.9",
+    "big-integer": "^1.6.46",
     "expo": "^34.0.1",
     "expo-asset": "^6.0.0",
     "expo-constants": "6.0.0",

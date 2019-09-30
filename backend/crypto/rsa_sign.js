@@ -28,7 +28,7 @@
 // 4096 / 1024
 
 const sha256 = require("js-sha256").sha256;
-import BigInteger from "./jsbn.js";
+const bigInt = require("big-integer");
 import RSAKey from "./rsa_raw.js";
 
 export default RSAKey;
@@ -56,7 +56,7 @@ function _rsasign_getHexPaddedDigestInfoForString(s, keySize) {
 
 function _rsasign_signString(s) {
   var hPM = _rsasign_getHexPaddedDigestInfoForString(s, this.n.bitLength());
-  var biPaddedMessage = new BigInteger(hPM, 16);
+  var biPaddedMessage = bigInt(hPM, 16);
   var biSign = this.doPrivate(biPaddedMessage);
   var hexSign = biSign.toString(16);
   return hexSign;
@@ -73,7 +73,7 @@ function _rsasign_getHashFromHexDisgestInfo(hDigestInfo) {
 
 function _rsasign_verifyString(sMsg, hSig) {
   hSig = hSig.replace(/[ \n]+/g, "");
-  var biSig = new BigInteger(hSig, 16);
+  var biSig = bigInt(hSig, 16);
   var biDecryptedSig = this.doPublic(biSig);
   var hDigestInfo = biDecryptedSig.toString(16).replace(/^1f+00/, "");
   var diHashValue = _rsasign_getHashFromHexDisgestInfo(hDigestInfo);

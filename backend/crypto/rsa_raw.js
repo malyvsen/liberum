@@ -5,7 +5,7 @@
 // Version 1.1: support utf-8 encoding in pkcs1pad2 (which has been deleted in last-id)
 // convert a (hex) string to a bignum object
 
-import BigInteger from "./jsbn.js";
+const bigInt = require("big-integer");
 
 // "empty" RSA key constructor
 export default function RSAKey() {
@@ -22,7 +22,7 @@ export default function RSAKey() {
 // Set the public key fields N and e from hex strings
 function RSASetPublic(N, E) {
   if (N != null && E != null && N.length > 0 && E.length > 0) {
-    this.n = new BigInteger(N, 16);
+    this.n = bigInt(N, 16);
     this.e = parseInt(E, 16);
   } else alert("Invalid RSA public key");
 }
@@ -30,7 +30,7 @@ function RSASetPublic(N, E) {
 // Perform raw public operation on "x": return x^e (mod n)
 
 function RSADoPublic(x) {
-  return x.modPowInt(this.e, this.n);
+  return x.modPow(this.e, this.n);
 }
 
 // protected
@@ -42,70 +42,69 @@ RSAKey.prototype.setPublic = RSASetPublic;
 // Set the private key fields N, e, and d from hex strings
 function RSASetPrivate(N, E, D) {
   if (N != null && E != null && N.length > 0 && E.length > 0) {
-    this.n = new BigInteger(N, 16);
+    this.n = bigInt(N, 16);
     this.e = parseInt(E, 16);
-    this.d = new BigInteger(D, 16);
+    this.d = bigInt(D, 16);
   } else alert("Invalid RSA private key");
 }
 
 // Set the private key fields N, e, d and CRT params from hex strings
 function RSASetPrivateEx(N, E, D, P, Q, DP, DQ, C) {
   if (N != null && E != null && N.length > 0 && E.length > 0) {
-    this.n = new BigInteger(N, 16);
+    this.n = bigInt(N, 16);
     this.e = parseInt(E, 16);
-    this.d = new BigInteger(D, 16);
-    this.p = new BigInteger(P, 16);
-    this.q = new BigInteger(Q, 16);
-    this.dmp1 = new BigInteger(DP, 16);
-    this.dmq1 = new BigInteger(DQ, 16);
-    this.coeff = new BigInteger(C, 16);
+    this.d = bigInt(D, 16);
+    this.p = bigInt(P, 16);
+    this.q = bigInt(Q, 16);
+    this.dmp1 = bigInt(DP, 16);
+    this.dmq1 = bigInt(DQ, 16);
+    this.coeff = bigInt(C, 16);
   } else alert("Invalid RSA private key");
 }
 
 // Generate a new random private key B bits long, using public expt E
 function RSAGenerate(B, E, rng) {
-  var qs = B >> 1;
+  const qs = B >> 1;
+  const maxQ = bigInt(2)
+    .pow(qs)
+    .subtract(bigInt.one);
+  const maxP = bigInt(2)
+    .pow(B - qs)
+    .subtract(bigInt.one);
   this.e = parseInt(E, 16);
-  var ee = new BigInteger(E, 16);
+  var exponentBigInt = bigInt(this.e);
   for (;;) {
-    for (;;) {
-      this.p = new BigInteger(B - qs, 1, rng);
-      if (
-        this.p
-          .subtract(BigInteger.ONE)
-          .gcd(ee)
-          .compareTo(BigInteger.ONE) == 0 &&
-        this.p.isProbablePrime(10, rng)
-      )
-        break;
-    }
-    for (;;) {
-      this.q = new BigInteger(qs, 1, rng);
-      if (
-        this.q
-          .subtract(BigInteger.ONE)
-          .gcd(ee)
-          .compareTo(BigInteger.ONE) == 0 &&
-        this.q.isProbablePrime(10, rng)
-      )
-        break;
-    }
+    this.p = guessRelativePrime(exponentBigInt, maxP, rng);
+    this.q = guessRelativePrime(exponentBigInt, maxQ, rng);
     if (this.p.compareTo(this.q) <= 0) {
       var t = this.p;
       this.p = this.q;
       this.q = t;
     }
-    var p1 = this.p.subtract(BigInteger.ONE);
-    var q1 = this.q.subtract(BigInteger.ONE);
+    var p1 = this.p.subtract(bigInt.one);
+    var q1 = this.q.subtract(bigInt.one);
     var phi = p1.multiply(q1);
-    if (phi.gcd(ee).compareTo(BigInteger.ONE) == 0) {
+    if (bigInt.gcd(phi, exponentBigInt).compareTo(bigInt.one) == 0) {
       this.n = this.p.multiply(this.q);
-      this.d = ee.modInverse(phi);
+      this.d = exponentBigInt.modInv(phi);
       this.dmp1 = this.d.mod(p1);
       this.dmq1 = this.d.mod(q1);
-      this.coeff = this.q.modInverse(this.p);
+      this.coeff = this.q.modInv(this.p);
       break;
     }
+  }
+}
+
+function guessRelativePrime(relativeTo, maxValue, rng) {
+  for (;;) {
+    var result = bigInt.randBetween(0, maxValue, rng);
+    if (
+      bigInt
+        .gcd(result.subtract(bigInt.one), relativeTo)
+        .compareTo(bigInt.one) == 0 &&
+      result.isProbablePrime(10, rng)
+    )
+      return result;
   }
 }
 

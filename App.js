@@ -16,7 +16,7 @@ export default function App(props) {
     const newGraph = new Graph();
     const newAccount = new Account(
       "createdAccount",
-      "hGsN2fJJOCqbM8eZsrJzBbLGYMhUIWMe5gQcpuSRaMr/3mJr/6ZfmpYNGdX2iwS/b295D0lE0y5Eqs24AK3jmjb/3mqyhrP64r6YN/umduFRTutqL+xZHsMP5TTjgv8CzFwzlqGO267ZJ4XT9kJ5oeIHUaVWdz1jHQ3PPZaTRgGgGWhILWoGPkLJ3CKukIPaHP4jJxYnOTx6EB01Ain24BMcGHqV21Ptvwcl3kmoQsOQ9iUZGh1RKkJe4RQm1JSPBvn8S6wz0oWELAVxsHBs13y0ZBHZZDcDwo46CW0cfI4+/sXI4SOQRkpwpoVzYB4u4FMvTQiPQ+UxQ7O9GG5X9Q=="
+      "A297gUHgdKlWLRHCjUeltRVqy+bMroZF5K7D2z0evSW+drb8vTHZirSKXU6QHPcgTp6d9BvpC99Cg4CK1Y3WoPjLseHz82Dkuk4g1CTrBJ3xjRP4EmdYPktsNsmIbUTPv02C7N7Mb2uoJrnU8AqAylfHJ6q3vhcwvtFoxkVDxfPEgqD5d/de1DJvY/ZebeQ7qQ9Jf/WlG/uCGHb4OzmBvu/mItYMWQUZVzHtAU0Lzoyll6i6tPTahyZQjKW3SFixjI//IEFtI3uMW/+AeAsHvoE60USGQ5vqsEHhoeIg8u5PZOAS8zhKXDUhG/rFAYFF5PT1ge2R0BnD1MTDRO1LBQ=="
     );
     newGraph.logIn(newAccount, "Here we go!").then(() => {
       setGraph(newGraph);
