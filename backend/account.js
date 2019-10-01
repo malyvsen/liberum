@@ -3,13 +3,12 @@ import Key from "./crypto/key.js";
 export default class Account {
   constructor(name, publicKey, connections = []) {
     this.name = name;
-    this.key = new Key();
-    this.key.publicKey = publicKey;
+    this.key = new Key({ publicKey: publicKey });
     this.connections = connections;
   }
 
   unlock = async password => {
-    await this.key.generate(this.name + password);
+    this.key.unlock(this.name + password);
   };
 
   getTrustOf = async account => {

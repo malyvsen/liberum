@@ -1,57 +1,38 @@
-import expect, { createSpy, spyOn, isSpy } from "expect";
+import expect from "expect";
 import Key from "../../../backend/crypto/key.js";
 
-test("same passwords give same public keys", () => {
-  const key = new Key();
-  const sameKey = new Key();
-  const password = "Here we go!";
-  return key.generate(password, 512).then(() => {
-    return sameKey.generate(password, 512).then(() => {
-      expect(sameKey.publicKey).toBe(key.publicKey);
-    });
-  });
+test("same secrets give same public keys", () => {
+  const key = new Key({ secret: "Here we go!", bitLength: 512 });
+  const sameKey = new Key({ secret: "Here we go!", bitLength: 512 });
+  expect(sameKey.publicKey).toBe(key.publicKey);
 });
 
-test("different passwords give different public keys", () => {
-  const key = new Key();
-  const differentKey = new Key();
-  return key.generate("Here we go!", 512).then(() => {
-    return differentKey.generate("No we don't", 512).then(() => {
-      expect(differentKey.publicKey).not.toBe(key.publicKey);
-    });
-  });
+test("different secrets give different public keys", () => {
+  const key = new Key({ secret: "Here we go!", bitLength: 512 });
+  const differentKey = new Key({ secret: "No we don't", bitLength: 512 });
+  expect(differentKey.publicKey).not.toBe(key.publicKey);
 });
 
 test("signatures can be verified using public key only", () => {
-  const signingKey = new Key();
-  const verifyingKey = new Key();
-  const password = "Here we go!";
-  const plaintext = "Clear, legible plaintext";
-  return signingKey.generate(password, 512).then(() => {
-    verifyingKey.publicKey = signingKey.publicKey;
-    return signingKey.sign(plaintext).then(signature => {
-      return verifyingKey.verify(plaintext, signature).then(status => {
-        expect(status).toBe(true);
-      });
-    });
-  });
+  const plaintext = "Plaintext to be signed";
+  const signingKey = new Key({ secret: "Here we go!", bitLength: 512 });
+  const verifyingKey = new Key({ publicKey: signingKey.publicKey });
+  const signature = signingKey.sign(plaintext);
+  const forgedSignature = signature
+    .split("")
+    .reverse()
+    .join("");
+  expect(verifyingKey.verify(plaintext, signature)).toBe(true);
 });
 
 test("forged signature is identified as such", () => {
-  const signingKey = new Key();
-  const verifyingKey = new Key();
-  const password = "Moo";
   const plaintext = "Text someone wants to mess with";
-  return signingKey.generate(password, 512).then(() => {
-    verifyingKey.publicKey = signingKey.publicKey;
-    return signingKey.sign(plaintext).then(signature => {
-      const forgedSignature = signature
-        .split("")
-        .reverse()
-        .join("");
-      return verifyingKey.verify(plaintext, forgedSignature).then(status => {
-        expect(status).toBe(false);
-      });
-    });
-  });
+  const signingKey = new Key({ secret: "Moo", bitLength: 512 });
+  const verifyingKey = new Key({ publicKey: signingKey.publicKey });
+  const signature = signingKey.sign(plaintext);
+  const forgedSignature = signature
+    .split("")
+    .reverse()
+    .join("");
+  expect(verifyingKey.verify(plaintext, forgedSignature)).toBe(false);
 });
