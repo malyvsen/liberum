@@ -55,14 +55,3 @@ test("forged signature is identified as such", () => {
     });
   });
 });
-
-test("the same passwords yields the same key across runs", () => {
-  const key = new Key();
-  const password = "Here we go!";
-  return key.generate(password, 512).then(() => {
-    console.log(key.publicKey);
-    expect(key.publicKey).toBe(
-      "DOl7CFQQhyEtr3csqcL4c69jZM1r1V2jy13fVsbLXuo/gRo90crSvLtzKnAHouvuy/NQyJRImq2U1/u8WmTdsQ=="
-    );
-  });
-});

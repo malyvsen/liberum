@@ -3,8 +3,10 @@ import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import Account from "./backend/account";
 import Graph from "./backend/graph";
+import exampleAccount, {
+  password as examplePassword
+} from "./example/account.js";
 import GraphContext from "./GraphContext";
 import AppNavigator from "./navigation/AppNavigator";
 
@@ -14,11 +16,7 @@ export default function App(props) {
 
   useEffect(() => {
     const newGraph = new Graph();
-    const newAccount = new Account(
-      "createdAccount",
-      "KwJ0wmWIX7scKUxChv+Vm2Q2NpO/PUfnAu1rAsVdrzkEPfyMNF/YrlJ5x0zoNugYmqh9vzBQ6Rg0TUqdK6UlAjg8azZYCTTSFNQbkM0FjgS4OC7GqNO7BQtVVIlaaiMLh50dU2JH1nZW7WWAq2WPyFPLzB6pnj5tZ2JspDacp4k9dy6szViCNWuUqqwgljy2XZGAr+B/HTMlwml4VVSxHr+Q+uW8WN7TvQnFfTmUD+GdX5AoHyrKJxt9jEv/yddOPS8jOX+DuORU7HfhnTpLkUi7EhZy4hS9wuxAE98SUFnNyb1iQrzG9n1UxvipHaUZ//JXvC+TqtPuxfCOUno+sw=="
-    );
-    newGraph.logIn(newAccount, "Here we go!").then(() => {
+    newGraph.logIn(exampleAccount, examplePassword).then(() => {
       setGraph(newGraph);
     });
   }, []);

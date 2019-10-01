@@ -8,6 +8,10 @@ export default class Account {
     this.connections = connections;
   }
 
+  unlock = async password => {
+    await this.key.generate(this.name + password);
+  };
+
   getTrustOf = async account => {
     return account.connections.length / (account.connections.length + 1);
   };

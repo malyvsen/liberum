@@ -7,14 +7,8 @@ export default class Graph {
   }
 
   logIn = async (account, password) => {
-    const keyFromPassword = new Key();
-    await keyFromPassword.generate(password);
-    if (keyFromPassword.publicKey == account.key.publicKey) {
-      this.currentAccount = account;
-      this.currentAccount.key = keyFromPassword;
-    } else {
-      throw new Error("keys don't match!");
-    }
+    await account.unlock(password);
+    this.currentAccount = account;
   };
 
   syncWith = async account => {

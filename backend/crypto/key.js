@@ -7,6 +7,12 @@ export default class Key {
 
   generate = async (password, bitLength = 2048) => {
     this.crypticoKey = cryptico.generateRSAKey(password, bitLength);
+    if (this.#publicKey) {
+      if (cryptico.publicKeyString(this.crypticoKey) != this.#publicKey) {
+        throw new Error("generated key does not match known key!");
+      }
+      this.#publicKey = null;
+    }
   };
 
   sign = async plaintext => {
@@ -20,8 +26,6 @@ export default class Key {
     return cryptico.verify(plaintext, signature, this.publicKey);
   };
 
-  #publicKey = null;
-
   get publicKey() {
     return this.#publicKey || cryptico.publicKeyString(this.crypticoKey);
   }
@@ -32,4 +36,6 @@ export default class Key {
     }
     this.#publicKey = publicKey;
   }
+
+  #publicKey = null;
 }
