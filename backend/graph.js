@@ -1,5 +1,3 @@
-import Key from "./crypto/key.js";
-
 export default class Graph {
   constructor(savePath) {
     this.accounts = savePath || []; // TODO: load data from save
