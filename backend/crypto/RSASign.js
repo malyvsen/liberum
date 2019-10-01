@@ -29,7 +29,7 @@
 
 const sha256 = require("js-sha256").sha256;
 const bigInt = require("big-integer");
-import RSAKey from "./rsa_raw.js";
+import RSAKey from "./RSA";
 
 export default RSAKey;
 

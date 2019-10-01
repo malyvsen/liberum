@@ -1,8 +1,8 @@
-const seedrandom = require("seedrandom");
-import RSAKey from "./rsa_sign.js";
-
 // Adapted for use in last-id from https://github.com/wwwtyro/cryptico
 // Cryptico could not be used as is because of security and dependency issues
+
+const seedrandom = require("seedrandom");
+import RSAKey from "./RSASign";
 
 export default {
   sign: function(plaintext, key) {
@@ -15,7 +15,7 @@ export default {
     return publicKey.verifyString(plaintext, signature16);
   },
 
-  generateRSAKey: function(password, bitLength) {
+  generateKey: function(password, bitLength) {
     const rng = seedrandom.alea(password);
     var rsa = new RSAKey();
     rsa.generate(bitLength, "03", rng);

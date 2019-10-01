@@ -3,10 +3,8 @@ import { AppLoading } from "expo";
 import * as Font from "expo-font";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import Graph from "./backend/graph";
-import exampleAccount, {
-  password as examplePassword
-} from "./example/account.js";
+import Graph from "./backend/Graph";
+import exampleAccount, { password as examplePassword } from "./example/Account";
 import GraphContext from "./GraphContext";
 import AppNavigator from "./navigation/AppNavigator";
 

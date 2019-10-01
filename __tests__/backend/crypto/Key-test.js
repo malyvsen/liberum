@@ -1,5 +1,5 @@
 import expect from "expect";
-import Key from "../../../backend/crypto/key.js";
+import Key from "../../../backend/crypto/Key";
 
 test("same secrets give same public keys", () => {
   const key = new Key({ secret: "Here we go!", bitLength: 512 });

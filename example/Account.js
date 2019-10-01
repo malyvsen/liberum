@@ -1,4 +1,4 @@
-import Account from "../backend/account.js";
+import Account from "../backend/Account";
 
 export default new Account(
   "cavejohnson",

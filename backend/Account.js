@@ -1,4 +1,4 @@
-import Key from "./crypto/key.js";
+import Key from "./crypto/Key";
 
 export default class Account {
   constructor(name, publicKey, links = []) {

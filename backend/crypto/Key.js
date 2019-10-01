@@ -1,4 +1,4 @@
-import cryptico from "./cryptico.js";
+import utils from "./Utils";
 
 export default class Key {
   constructor({ publicKey, secret, bitLength }) {
@@ -16,14 +16,14 @@ export default class Key {
   }
 
   get locked() {
-    return !this.#crypticoKey;
+    return !this.#rsaKey;
   }
 
   unlock(secret, bitLength = 2048) {
     if (!this.locked) throw new Error("cannot unlock already unlocked key");
-    this.#crypticoKey = cryptico.generateRSAKey(secret, bitLength);
+    this.#rsaKey = utils.generateKey(secret, bitLength);
     if (this.#publicKey) {
-      if (cryptico.publicKeyString(this.#crypticoKey) != this.#publicKey) {
+      if (utils.publicKeyString(this.#rsaKey) != this.#publicKey) {
         throw new Error(
           "generated key does not match! this is likely due to an incorrect secret"
         );
@@ -35,22 +35,22 @@ export default class Key {
   lock() {
     if (this.locked) throw new Error("cannot lock already locked key");
     this.#publicKey = this.publicKey;
-    this.#crypticoKey = null;
+    this.#rsaKey = null;
   }
 
   sign(plaintext) {
     if (this.locked) throw new Error("cannot use locked key to sign");
-    return cryptico.sign(plaintext, this.#crypticoKey);
+    return utils.sign(plaintext, this.#rsaKey);
   }
 
   verify(plaintext, signature) {
-    return cryptico.verify(plaintext, signature, this.publicKey);
+    return utils.verify(plaintext, signature, this.publicKey);
   }
 
   get publicKey() {
-    return this.#publicKey || cryptico.publicKeyString(this.#crypticoKey);
+    return this.#publicKey || utils.publicKeyString(this.#rsaKey);
   }
 
-  #crypticoKey = null;
+  #rsaKey = null;
   #publicKey = null;
 }
