@@ -113,7 +113,7 @@ function guessRelativePrime(relativeTo, maxValue, rng) {
 // primify does not affect the distribution from which bigInts are sampled - only speeds up sampling
 // see relevant proof on wiki
 function primify(value) {
-  const masks = [1, 0, 3, 2, 7, 0];
+  const masks = [1, 0, 3, 2, 1, 0];
   return value.xor(masks[value.mod(6)]);
 }
 
