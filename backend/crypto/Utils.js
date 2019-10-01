@@ -16,7 +16,7 @@ export default {
   },
 
   generateKey: function(password, bitLength) {
-    const rng = seedrandom.alea(password);
+    const rng = seedrandom.alea(password).quick; // 32 bits is enough - BigInteger.js internally uses base 10^7
     var rsa = new RSAKey();
     rsa.generate(bitLength, "03", rng);
     return rsa;
