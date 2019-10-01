@@ -62,7 +62,7 @@ test("the same passwords yields the same key across runs", () => {
   return key.generate(password, 512).then(() => {
     console.log(key.publicKey);
     expect(key.publicKey).toBe(
-      "QkWUs896e7mSW8reUYhZ+98YNeWWrj9Fpc2+sYc+cSls6y7fdXnyibZqyKG4xmMddjTzpL9UyGz/+O1gJxoezw=="
+      "DOl7CFQQhyEtr3csqcL4c69jZM1r1V2jy13fVsbLXuo/gRo90crSvLtzKnAHouvuy/NQyJRImq2U1/u8WmTdsQ=="
     );
   });
 });

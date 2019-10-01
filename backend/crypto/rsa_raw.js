@@ -109,17 +109,11 @@ function guessRelativePrime(relativeTo, maxValue, rng) {
 }
 
 // makes a bigInt not divisible by 2 or 3
-// if the bigInt was to be rejected if it were divisible by 2 or 3, as is the case with guessRelativePrime,
-// primify does not affect the distribution from which bigInts are sampled
+// if the bigInt was to be rejected when divisible by 2 or 3, as is the case with guessRelativePrime,
+// primify does not affect the distribution from which bigInts are sampled - only speeds up sampling
 function primify(value) {
-  var mask = 0;
-  if (value.isEven()) {
-    mask |= 1; // set the remainder by 2 to 1
-  }
-  if (value.mod(3).compareTo(bigInt.zero) == 0) {
-    mask |= 2 << (mask & 1); // randomly (50/50) pick a remainder by 3: 1 or 2
-  }
-  return value.xor(mask);
+  const masks = [1, 0, 3, 2, 7, 0];
+  return value.xor(masks[value.mod(6)]);
 }
 
 // Perform raw private operation on "x": return x^d (mod n)
