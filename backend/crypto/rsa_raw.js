@@ -111,6 +111,7 @@ function guessRelativePrime(relativeTo, maxValue, rng) {
 // makes a bigInt not divisible by 2 or 3
 // if the bigInt was to be rejected when divisible by 2 or 3, as is the case with guessRelativePrime,
 // primify does not affect the distribution from which bigInts are sampled - only speeds up sampling
+// see relevant proof on wiki
 function primify(value) {
   const masks = [1, 0, 3, 2, 7, 0];
   return value.xor(masks[value.mod(6)]);
