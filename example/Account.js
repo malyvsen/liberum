@@ -2,7 +2,7 @@ import Account from "../backend/Account";
 
 export default new Account(
   "cavejohnson",
-  "FLEfNij9iXotOd9cjvCVpHH0TqqKCsu0Sr8YCPGdLbCk0Hsx+2ocvuc3JSpvpL9TIeOiUg5hnPWS1ztwAFZILReyUmE1vVPZixAjfjIpAkHWiOeVdxVmNmVRDrsbgjvRFpjL7OQ022jjOOiLdbRbzAJrY/zhZb82O+OPqEkeBlBUQ1pmh1nrVSJaqjWq/DxfRfKjkXN7ytUI9sn8UsCBhGz7V//D23UlyToVzD+ZhzUX16nwmC9rpERGGadZp0+Dj6OlW4dYZ/fGHa+VxwOuaTRtohbiow6gdmkHvhSRONkKNhvRhBRm6tAprDMTKFJv3EushdVqJMQsBpfM6q1FrQ=="
+  "A3DJ4Hqg4de4XVlh426qUSX/x3Fa4UJKVbzFYWoayL2JGOedfHpvbeLSde7NWBV/oe3ibzsNRTwp0Xs7AWMw7kzWovExqMQxhwwuvG5cdsQ50yfSw8wsM8tg3be59rl8uQnmChh1/eBdjFk0l42G/nk9McaB3hLFhyU2BegY4UswRm/nzlNEG0vMqkLXkqmZAolohDeta5wMwwtzUTfhfZTeW3UaGL0lZozk5zrS8faKI55LxylxKbbX2pRLXKrqu/V14cxfjfEUzRVYAhIDcXeJov0uCqWHKqztLaZt3kWtVKkcfSIwWa3zgSOoF+6IqrXuA/ea9Nk3zPU3LjCfSQ=="
 );
 
 export const password = "When life gives you lemons, don't make lemonade.";
