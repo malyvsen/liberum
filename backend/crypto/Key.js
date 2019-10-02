@@ -25,7 +25,10 @@ export default class Key {
     if (this.#publicKey) {
       if (utils.publicKeyString(this.#rsaKey) != this.#publicKey) {
         throw new Error(
-          "generated key does not match! this is likely due to an incorrect secret"
+          "generated key: " +
+            utils.publicKeyString(this.#rsaKey) +
+            " does not match known public key: " +
+            this.#publicKey
         );
       }
       this.#publicKey = null;
