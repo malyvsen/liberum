@@ -1,10 +1,13 @@
-export default class Password {
-  constructor(text, seed, length = 12) {
-    if (text) {
-      assert(seed == undefined);
-      this.text = text;
-    } else {
-      this.text = "A" * length; // TODO: random generation
-    }
+const seedrandom = require("seedrandom");
+
+export function random(seed) {
+  const rng = seedrandom(seed).int32;
+  var result = "";
+  for (var i = 0; i < length; i++) {
+    result += alphabet[rng() % alphabet.length];
   }
+  return result;
 }
+
+export const alphabet = "abcdefghijklmnopqrstuvwxyz1234567890";
+export const length = 7; // 36 ^ 7 = 78,364,164,096 combinations
