@@ -1,6 +1,8 @@
 // Adapted for use in last-id from https://github.com/wwwtyro/cryptico
 // Cryptico could not be used as is because of security and dependency issues
 
+// The functions here are wrappers intended to make changing to different signing scheme easier
+
 const bigInt = require("big-integer");
 const seedrandom = require("seedrandom");
 import RSAKey from "./RSAKey";

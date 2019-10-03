@@ -25,13 +25,6 @@ export default class RSAKey {
     this.privateExp = bigInt(privateExp);
   }
 
-  /**
-   * Generates a k-bit RSA public/private key pair
-   *
-   * @param   {bitLength} int, bit length of desired public key (should be even)
-   * @param   {rng} function, used for generating randomness - should return values between 0 and 1
-   * @returns {RSAKey} generated RSA key
-   */
   static generate(bitLength, rng) {
     let p;
     let q;
@@ -54,58 +47,31 @@ export default class RSAKey {
     return new RSAKey(p.multiply(q), publicExp.modInv(lambda));
   }
 
-  /**
-   * Encrypt
-   *
-   * @param   {message} bigInt, message to be encrypted
-   * @returns {bigInt} encrypted message
-   */
-  encrypt(message) {
-    return message.modPow(publicExp, this.mod);
+  sign(plaintext) {
+    return decryptHex(hash(plaintext), this.mod, this.privateExp);
   }
 
-  /**
-   * Decrypt
-   *
-   * @param   {message} bigInt, message to be decrypted
-   * @returns {bigInt} decrypted message
-   */
-  decrypt(message) {
-    return message.modPow(this.privateExp, this.mod);
-  }
-
-  sign(s) {
-    var hexPadded = getHexPaddedDigestInfoForString(s, this.mod.bitLength());
-    return this.decrypt(bigInt(hexPadded, 16)).toString(16);
-  }
-
-  verify(sMsg, hSig) {
-    hSig = hSig.replace(/[ \n]+/g, "");
-    var biSig = bigInt(hSig, 16);
-    var biDecryptedSig = this.encrypt(biSig);
-    var hDigestInfo = biDecryptedSig.toString(16).replace(/^1f+00/, "");
-    var diHashValue = hDigestInfo.substring(_RSASIGN_DIHEAD.length);
-    var msgHashValue = sha256(sMsg);
-    return diHashValue == msgHashValue;
+  verify(plaintext, signature) {
+    return encryptHex(signature, this.mod) == hash(plaintext);
   }
 }
 
 const publicExp = bigInt(65537);
-const _RSASIGN_DIHEAD = "3031300d060960864801650304020105000420";
 
-function getHexPaddedDigestInfoForString(s, keySize) {
-  var pmStrLen = keySize / 4;
-  var sHashHex = sha256(s);
+function hash(plaintext) {
+  return "256a" + sha256(plaintext); // 256a identifies the hashing algorithm and protects hashes starting with 0
+}
 
-  var sHead = "0001";
-  var sTail = "00" + _RSASIGN_DIHEAD + sHashHex;
-  var sMid = "";
-  var fLen = pmStrLen - sHead.length - sTail.length;
-  for (var i = 0; i < fLen; i += 2) {
-    sMid += "ff";
-  }
-  sPaddedMessageHex = sHead + sMid + sTail;
-  return sPaddedMessageHex;
+function encryptHex(hexString, mod) {
+  return bigInt(hexString, 16)
+    .modPow(publicExp, mod)
+    .toString(16);
+}
+
+function decryptHex(hexString, mod, privateExp) {
+  return bigInt(hexString, 16)
+    .modPow(privateExp, mod)
+    .toString(16);
 }
 
 function randomPrime(bitLength, rng) {
