@@ -19,7 +19,6 @@ test("different seeds give different passwords", () => {
 
 test("randomly generated password is valid", () => {
   const password = randomPassword("pa$$word");
-  console.log(password);
   expect(isValid(password)).toBe(true);
 });
 
