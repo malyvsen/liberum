@@ -1,3 +1,4 @@
+import * as Password from "./crypto/Password";
 import Key from "./crypto/Key";
 
 export default class Account {
@@ -8,6 +9,7 @@ export default class Account {
   }
 
   unlock(password) {
+    if (!Password.isValid(password)) throw new Error("invalid password!");
     this.key.unlock({ username: this.name, password: password });
   }
 
