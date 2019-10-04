@@ -1,5 +1,5 @@
 const seedrandom = require("seedrandom");
-import { positiveMod } from "./Utils";
+import { positiveMod } from "../Utils";
 
 export function random(seed) {
   const rng = seedrandom(seed).int32;

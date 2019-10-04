@@ -1,5 +1,8 @@
 import expect from "expect";
-import { random as randomPassword, isValid } from "../../backend/Password";
+import {
+  random as randomPassword,
+  isValid
+} from "../../../backend/crypto/Password";
 
 test("same seeds give same passwords", () => {
   const seed = "one two three";
