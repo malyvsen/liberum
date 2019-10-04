@@ -8,7 +8,7 @@ export default class Account {
   }
 
   unlock(password) {
-    this.key.unlock(this.name + password);
+    this.key.unlock({ username: this.name, password: password });
   }
 
   get neighbors() {

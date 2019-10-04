@@ -1,3 +1,4 @@
+const scrypt = require("scryptsy");
 import utils from "./Utils";
 
 export default class Key {
@@ -11,7 +12,7 @@ export default class Key {
     if (publicKey) {
       this.#publicKey = publicKey;
     } else {
-      this.unlock(secret, bitLength);
+      this.unlock({ secret: secret, bitLength: bitLength });
     }
   }
 
@@ -19,8 +20,17 @@ export default class Key {
     return !this.#rsaKey;
   }
 
-  unlock(secret, bitLength = 2048) {
+  unlock({ username, password, secret, bitLength = 2048 }) {
     if (!this.locked) throw new Error("cannot unlock already unlocked key");
+    if ((username || password) && secret)
+      throw new Error(
+        "do you want to unlock with username+password or secret?"
+      );
+    if (!((username && password) || secret))
+      throw new Error("provide either username+password or secret!");
+    if (!secret) {
+      secret = scrypt(username, password, 2 ** 16, 8, 4, 256);
+    }
     this.#rsaKey = utils.generateKey(secret, bitLength);
     if (this.#publicKey) {
       if (utils.publicKeyString(this.#rsaKey) != this.#publicKey) {
