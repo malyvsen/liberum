@@ -1,18 +1,21 @@
+import { keyLength } from "./Config";
 import RSAKey from "./RSAKey";
 import * as hash from "./Hash";
 
 export default class Key {
-  constructor({ publicKey, secret, bitLength }) {
-    if (publicKey && secret)
+  constructor({ publicKey, username, password, secret }) {
+    if (publicKey && (secret || username || password))
       throw new Error(
         "make up your mind, do you want to generate a key or create a locked one?"
       );
-    if (!(publicKey || secret))
-      throw new Error("you must provide a public key or secret");
+    if (!(publicKey || secret || (username && password)))
+      throw new Error(
+        "you must provide a public key or means of generating a private key"
+      );
     if (publicKey) {
       this.#publicKey = publicKey;
     } else {
-      this.unlock({ secret: secret, bitLength: bitLength });
+      this.unlock({ username: username, password: password, secret: secret });
     }
   }
 
@@ -20,7 +23,7 @@ export default class Key {
     return !this.#rsaKey;
   }
 
-  unlock({ username, password, secret, bitLength = 2048 }) {
+  unlock({ username, password, secret }) {
     if (!this.locked) throw new Error("cannot unlock already unlocked key");
     if ((username || password) && secret)
       throw new Error(
@@ -31,7 +34,7 @@ export default class Key {
     if (!secret) {
       secret = hash.strong(password, username);
     }
-    this.#rsaKey = RSAKey.fromSeed(bitLength, secret);
+    this.#rsaKey = RSAKey.fromSeed(keyLength, secret);
     if (this.#publicKey) {
       if (this.#rsaKey.publicToString() != this.#publicKey) {
         throw new Error(

@@ -1,3 +1,4 @@
+import { hashDifficulty } from "./Config";
 const sha256 = require("js-sha256").sha256;
 
 export function fast(plaintext) {
@@ -5,9 +6,8 @@ export function fast(plaintext) {
 }
 
 export function strong(plaintext, salt) {
-  const difficulty = 2 ** 24;
   var carry = plaintext;
-  for (var i = 0; i < difficulty; i++) {
+  for (var i = 0; i < hashDifficulty; i++) {
     carry = sha256(salt + carry);
   }
   return "256b" + carry;
