@@ -1,4 +1,3 @@
-const scrypt = require("scryptsy");
 import utils from "./Utils";
 
 export default class Key {
@@ -29,7 +28,7 @@ export default class Key {
     if (!((username && password) || secret))
       throw new Error("provide either username+password or secret!");
     if (!secret) {
-      secret = scrypt(username, password, 2 ** 16, 8, 4, 256);
+      secret = utils.strongHash(password, username);
     }
     this.#rsaKey = utils.generateKey(secret, bitLength);
     if (this.#publicKey) {
