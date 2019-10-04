@@ -18,8 +18,8 @@
 // included in all copies or substantial portions of the Software.
 
 const bigInt = require("big-integer");
-import * as hash from "./Hash";
-import * as random from "./Random";
+import * as Hash from "./Hash";
+import * as Random from "./Random";
 
 export default class RSAKey {
   constructor(mod, privateExp = null) {
@@ -28,7 +28,7 @@ export default class RSAKey {
   }
 
   static fromSeed(bitLength, seed) {
-    const rng = random.float32(seed); // 32 bits is enough - BigInteger.js internally uses base 10^7
+    const rng = Random.float32(seed); // 32 bits is enough - BigInteger.js internally uses base 10^7
     return RSAKey.fromRNG(bitLength, rng);
   }
 
@@ -63,11 +63,11 @@ export default class RSAKey {
   }
 
   sign(plaintext) {
-    return decryptHex(hash.fast(plaintext), this.mod, this.privateExp);
+    return decryptHex(Hash.fast(plaintext), this.mod, this.privateExp);
   }
 
   verify(plaintext, signature) {
-    return encryptHex(signature, this.mod) == hash.fast(plaintext);
+    return encryptHex(signature, this.mod) == Hash.fast(plaintext);
   }
 }
 

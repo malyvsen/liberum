@@ -1,6 +1,6 @@
 import { keyLength } from "./Config";
 import RSAKey from "./RSAKey";
-import * as hash from "./Hash";
+import * as Hash from "./Hash";
 
 export default class Key {
   constructor({ publicKey, username, password, secret }) {
@@ -32,7 +32,7 @@ export default class Key {
     if (!((username && password) || secret))
       throw new Error("provide either username+password or secret!");
     if (!secret) {
-      secret = hash.strong(password, username);
+      secret = Hash.strong(password, username);
     }
     this.#rsaKey = RSAKey.fromSeed(keyLength, secret);
     if (this.#publicKey) {

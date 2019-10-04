@@ -1,8 +1,8 @@
-import { int32 as randInt32 } from "./Random";
+import * as Random from "./Random";
 import { positiveMod } from "../Utils";
 
 export function random(seed) {
-  const rng = randInt32(seed);
+  const rng = Random.int32(seed);
   var result = "";
   for (var i = 0; i < length; i++) {
     result += alphabet[positiveMod(rng(), alphabet.length)];
