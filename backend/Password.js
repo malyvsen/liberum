@@ -10,5 +10,12 @@ export function random(seed) {
   return result;
 }
 
+export function isValid(password) {
+  return (
+    password.split("").every(letter => alphabet.includes(letter)) &&
+    password.length == length
+  );
+}
+
 export const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 export const length = 7; // 36 ^ 7 = 78,364,164,096 combinations
