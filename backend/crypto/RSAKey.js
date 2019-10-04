@@ -1,6 +1,7 @@
 // Adapted for use in last-id from:
 // https://en.wikipedia.org/wiki/RSA_(cryptosystem)#Code
 // https://github.com/wwwtyro/cryptico
+// Cryptico could not be used as is because of security and dependency issues
 // Original comment follows
 
 // rsa-sign.js - adding signing functions to RSAKey class.
@@ -17,7 +18,8 @@
 // included in all copies or substantial portions of the Software.
 
 const bigInt = require("big-integer");
-const sha256 = require("js-sha256").sha256;
+import * as hash from "./Hash";
+import * as random from "./Random";
 
 export default class RSAKey {
   constructor(mod, privateExp = null) {
@@ -25,7 +27,12 @@ export default class RSAKey {
     this.privateExp = bigInt(privateExp);
   }
 
-  static generate(bitLength, rng) {
+  static fromSeed(bitLength, seed) {
+    const rng = random.float32(seed); // 32 bits is enough - BigInteger.js internally uses base 10^7
+    return RSAKey.fromRNG(bitLength, rng);
+  }
+
+  static fromRNG(bitLength, rng) {
     let p;
     let q;
     let lambda;
@@ -47,20 +54,24 @@ export default class RSAKey {
     return new RSAKey(p.multiply(q), publicExp.modInv(lambda));
   }
 
+  static publicFromString(string) {
+    return new RSAKey(bigInt(string, 16));
+  }
+
+  publicToString() {
+    return this.mod.toString(16);
+  }
+
   sign(plaintext) {
-    return decryptHex(hash(plaintext), this.mod, this.privateExp);
+    return decryptHex(hash.fast(plaintext), this.mod, this.privateExp);
   }
 
   verify(plaintext, signature) {
-    return encryptHex(signature, this.mod) == hash(plaintext);
+    return encryptHex(signature, this.mod) == hash.fast(plaintext);
   }
 }
 
 const publicExp = bigInt(65537);
-
-function hash(plaintext) {
-  return "256a" + sha256(plaintext); // 256a identifies the hashing algorithm and protects hashes starting with 0
-}
 
 function encryptHex(hexString, mod) {
   return bigInt(hexString, 16)

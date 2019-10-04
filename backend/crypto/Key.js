@@ -1,4 +1,5 @@
-import utils from "./Utils";
+import RSAKey from "./RSAKey";
+import * as hash from "./Hash";
 
 export default class Key {
   constructor({ publicKey, secret, bitLength }) {
@@ -28,14 +29,14 @@ export default class Key {
     if (!((username && password) || secret))
       throw new Error("provide either username+password or secret!");
     if (!secret) {
-      secret = utils.strongHash(password, username);
+      secret = hash.strong(password, username);
     }
-    this.#rsaKey = utils.generateKey(secret, bitLength);
+    this.#rsaKey = RSAKey.fromSeed(bitLength, secret);
     if (this.#publicKey) {
-      if (utils.publicKeyString(this.#rsaKey) != this.#publicKey) {
+      if (this.#rsaKey.publicToString() != this.#publicKey) {
         throw new Error(
           "generated key: " +
-            utils.publicKeyString(this.#rsaKey) +
+            this.#rsaKey.publicToString() +
             " does not match known public key: " +
             this.#publicKey
         );
@@ -52,15 +53,15 @@ export default class Key {
 
   sign(plaintext) {
     if (this.locked) throw new Error("cannot use locked key to sign");
-    return utils.sign(plaintext, this.#rsaKey);
+    return this.#rsaKey.sign(plaintext);
   }
 
   verify(plaintext, signature) {
-    return utils.verify(plaintext, signature, this.publicKey);
+    return RSAKey.publicFromString(this.publicKey).verify(plaintext, signature);
   }
 
   get publicKey() {
-    return this.#publicKey || utils.publicKeyString(this.#rsaKey);
+    return this.#publicKey || this.#rsaKey.publicToString();
   }
 
   #rsaKey = null;
