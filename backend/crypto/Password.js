@@ -1,8 +1,8 @@
-const seedrandom = require("seedrandom");
+import * as random from "./Random";
 import { positiveMod } from "../Utils";
 
 export function random(seed) {
-  const rng = seedrandom(seed).int32;
+  const rng = random.int32(seed);
   var result = "";
   for (var i = 0; i < length; i++) {
     result += alphabet[positiveMod(rng(), alphabet.length)];
