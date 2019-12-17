@@ -13,6 +13,10 @@ export default class Account {
     this.key.unlock({ username: this.name, password: password });
   }
 
+  lock() {
+    this.key.lock();
+  }
+
   get neighbors() {
     const withDuplicates = this.validLinks.reduce(function(neighbors, link) {
       return (
