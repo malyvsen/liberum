@@ -18,21 +18,17 @@ export default class Account {
   }
 
   get neighbors() {
-    const withDuplicates = this.validLinks.reduce(function(neighbors, link) {
-      return (
-        neighbors +
+    const withDuplicates = this.validLinks
+      .map(link =>
         link.accounts.filter(
           account => account.key.publicKey !== this.key.publicKey
         )
-      );
-    }, []);
+      )
+      .flat();
     return [...new Set(withDuplicates)]; // this compares references, but that's okay for our purposes
   }
 
   get validLinks() {
-    return this.links.reduce(function(onlyValid, link) {
-      if (link.valid) return onlyValid.push(link);
-      else return onlyValid;
-    }, []);
+    return this.links.filter(link => link.isValid);
   }
 }
