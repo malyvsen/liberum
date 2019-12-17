@@ -25,7 +25,7 @@ export default class Graph {
 
   logOut() {
     if (!this.loggedIn) throw new Error("cannot log out when not logged in");
-    this.currentAccount.lock();
+    this.currentAccount.key.lock();
     this.#currentAccount = null;
   }
 
@@ -58,7 +58,7 @@ export default class Graph {
     for (let linkData of data.links) {
       const keys = Object.keys(linkData.signatures);
       const accounts = keys.map(key =>
-        this.accounts.find(account => account.publicKey == key)
+        this.accounts.find(account => account.key.publicKey == key)
       );
       const link = new Link(accounts, linkData.validFrom, linkData.signatures);
       for (let account of accounts) {

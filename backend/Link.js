@@ -6,7 +6,9 @@ export default class Link {
     if (
       Object.keys(this.signatures).some(
         publicKey =>
-          !this.accounts.map(account => account.publicKey).includes(publicKey)
+          !this.accounts
+            .map(account => account.key.publicKey)
+            .includes(publicKey)
       )
     )
       throw new Error("all signing accounts must be part of link");
