@@ -50,17 +50,22 @@ export default class Graph {
       throw new Error("cannot load when already not empty");
     const loaded = await AsyncStorage.getItem(path);
     const data = JSON.parse(loaded);
+
     if (data.saveSystemVersion != saveSystemVersion)
       throw new Error("mismatched save system version");
+
     this.accounts = data.accounts.map(
       accountData => new Account(accountData.name, accountData.publicKey)
     );
+
     for (let linkData of data.links) {
       const keys = Object.keys(linkData.signatures);
       const accounts = keys.map(key =>
         this.accounts.find(account => account.key.publicKey == key)
       );
       const link = new Link(accounts, linkData.validFrom, linkData.signatures);
+      if (!link.valid) continue; // could be expired, for example
+
       for (let account of accounts) {
         account.links.push(link);
       }
