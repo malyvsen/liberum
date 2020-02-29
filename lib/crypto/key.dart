@@ -78,6 +78,9 @@ class Key {
     return _publicKey.hashCode.toRadixString(16).substring(0, 16);
   }
 
+  String get publicKey => _publicKey.toString();
+  String get privateKey => _privateKey.toString();
+
   // private
   RSAPublicKey _publicKey;
   RSAPrivateKey _privateKey;
