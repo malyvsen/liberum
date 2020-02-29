@@ -4,6 +4,10 @@ class Graph {
   final accounts = <Account>[];
   Account currentAccount;
 
+  List<Account> get savedAccounts {
+    return [Account("Cave Johnson", "PUBLIC KEY GOES HERE")]; // TODO: this is a mock
+  }
+
   bool logIn(Account account, String password) {
     return true; // TODO
   }
