@@ -1,4 +1,4 @@
-import 'package:liberum/graph/account.dart';
+import 'package:liberum/network/account.dart';
 
 class Link {
   List<Account> accounts;
