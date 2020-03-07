@@ -1,18 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:liberum/frontend/home/main.dart';
 import 'package:liberum/frontend/landing/main.dart';
+import 'package:liberum/frontend/landing/pin.dart';
 
-void main() => runApp(MyApp());
+import 'package:liberum/network/account.dart';
+import 'package:liberum/network/network.dart';
 
-class MyApp extends StatefulWidget {
-  @override
-  MyAppState createState() => MyAppState();
+class AccountModel extends ChangeNotifier {
+  /// Internal, private state of the cart.
+  Account loginAccount;
+  Network network;
+
+  /// An unmodifiable view of the items in the cart.
+  void login(password) {
+    network = Network.logIn(loginAccount, password);
+    notifyListeners();
+  }
+
+  void setLoginAccount(account) {
+    loginAccount = account;
+  }
 }
 
-class MyAppState extends State<MyApp> {
-  var account = 1;
+void main() => runApp(ChangeNotifierProvider(
+    create: (context) => AccountModel(), child: MyApp()));
 
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,6 +37,7 @@ class MyAppState extends State<MyApp> {
       initialRoute: '/landing',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
+        '/pin': (context) => PasswordScreen(),
         '/landing': (context) => LandingScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/': (context) => HomeScreen(),
