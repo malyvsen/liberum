@@ -95,7 +95,7 @@ class Key {
     final keyGen = RSAKeyGenerator();
     keyGen.init(
       ParametersWithRandom(
-        RSAKeyGeneratorParameters(BigInt.parse('65537'), 4096, 64),
+        RSAKeyGeneratorParameters(BigInt.parse('65537'), 256, 64),
         secureRandom
       )
     );
@@ -104,6 +104,7 @@ class Key {
     if (privateKey != null) {
       this._privateKey = keyPair.privateKey;
     }
+    return;
 
     // final functionality below
     final parser = RSAKeyParser();
