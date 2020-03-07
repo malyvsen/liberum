@@ -20,4 +20,9 @@ void main() {
     Key otherKey = Key.generate();
     expect(otherKey.publicKey, isNot(equals(generatedKey.publicKey)));
   });
+
+  test('Key can be stringified and parsed back', () {
+    Key otherKey = Key.fromPublicKey(generatedKey.publicKey);
+    expect(otherKey.publicKey, equals(generatedKey.publicKey));
+  });
 }
