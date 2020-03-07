@@ -11,9 +11,8 @@ void main() {
     plainText = 'When life gives you lemons, don\'t make lemonade!';
   });
 
-  test('Matching keys verify succesfully', () {
-    Key otherKey = Key.fromPublicKey(generatedKey.publicKey);
-    expect(otherKey.verify(plainText, generatedKey.sign(plainText)), isTrue);
+  test('The same key can be used to sign and verify', () {
+    expect(generatedKey.verify(plainText, generatedKey.sign(plainText)), isTrue);
   });
 
   test('Two random keys are different', () {
@@ -21,8 +20,24 @@ void main() {
     expect(otherKey.publicKey, isNot(equals(generatedKey.publicKey)));
   });
 
-  test('Key can be stringified and parsed back', () {
+  test('A signature forgery is detected', () {
+    Key otherKey = Key.generate();
+    expect(generatedKey.verify(plainText, otherKey.sign(plainText)), isFalse);
+  });
+
+  test('Public key can be stringified and parsed back', () {
     Key otherKey = Key.fromPublicKey(generatedKey.publicKey);
     expect(otherKey.publicKey, equals(generatedKey.publicKey));
+  });
+
+  test('Key pair can be stringified and parsed back', () {
+    Key otherKey = Key.fromKeys(generatedKey.publicKey, generatedKey.privateKey);
+    expect(otherKey.publicKey, equals(generatedKey.publicKey));
+    expect(otherKey.privateKey, equals(generatedKey.privateKey));
+  });
+
+  test('Stringified and parsed key can be used for signing', () {
+    Key otherKey = Key.fromKeys(generatedKey.publicKey, generatedKey.privateKey);
+    expect(generatedKey.verify(plainText, otherKey.sign(plainText)), isTrue);
   });
 }

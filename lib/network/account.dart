@@ -13,7 +13,7 @@ class Account {
 
   Account.logIn(String fingerprint, String password) {
     this.name = 'Cave Johnson'; // TODO: load from storage
-    this.key = Key.fromSecureStorage(this.name, password); // TODO
+    this.key = Key.fromSecureStorage(fingerprint, password);
   }
 
   double getTrustOf(Account other) {

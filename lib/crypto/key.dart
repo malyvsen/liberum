@@ -97,7 +97,7 @@ class Key {
     this._publicKey = RSAPublicKey(publicInts[0], publicInts[1]);
     if (privateKey != null) {
       final privateInts = parseBigInts(privateKey);
-      if (privateInts.take(2).toList() != publicInts.take(2).toList()) {
+      if (privateInts[0] != publicInts[0]) {
         throw ArgumentError('Private and public keys don\'t match');
       }
       this._privateKey = RSAPrivateKey(privateInts[0], privateInts[1], privateInts[2], privateInts[3]);
