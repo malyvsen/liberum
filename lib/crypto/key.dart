@@ -28,9 +28,9 @@ class Key {
   }
 
   Key.fromSecureStorage(String databaseKey, String password) {
-    final publicKey = "should be read from SQLite"; // TODO
-    final privateKey = "very secret private key"; // should be read from secure storage
-    final truePassword = "lemons"; // should be read from secure storage
+    final publicKey = Key.generate().publicKey; // TODO: should be read from SQLite
+    final privateKey = Key.generate().privateKey; // TODO: should be read from secure storage
+    final truePassword = 'lemons'; // TODO: should be read from secure storage
     if (password != truePassword) {
       throw BadPasswordException();
     }
@@ -103,7 +103,7 @@ class Key {
     }
   }
 
-  static const String separator = '#';
+  static const String separator = '|';
   static const int radix = 16;
   static List<BigInt> parseBigInts(String separated) =>
     separated.split(separator).map((x) => BigInt.parse(x, radix: radix)).toList();
