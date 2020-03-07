@@ -1,13 +1,14 @@
+import 'package:liberum/crypto/key.dart';
 import 'package:liberum/network/account.dart';
 
 class Network {
   final accounts = <Account>[];
   Account currentAccount;
 
-  static List<Account> get savedAccounts {
+  static List<Account> get loggableAccounts {
     return [
-      Account.fromPublicData('Cave Johnson', 'secret key'),
-      Account.fromPublicData('Julius Caesar', 'ides of march')
+      Account.fromPublicData('Cave Johnson', Key.generate().publicKey),
+      Account.fromPublicData('Julius Caesar', Key.generate().publicKey)
     ]; // TODO: this is a mock
   }
 
