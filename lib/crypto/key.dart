@@ -12,7 +12,7 @@ import 'package:pointycastle/export.dart'
 show FortunaRandom, KeyParameter, ParametersWithRandom, RSAKeyGenerator, RSAKeyGeneratorParameters;
 
 
-
+/// Wrapper around various crypto algorithms, used to sign/verify links
 class Key {
   Key.fromPublicKey(String publicKey) {
     this._init(publicKey);
@@ -75,42 +75,36 @@ class Key {
   /// Short identifier for a public key.
   /// Can be safely displayed publicly.
   String get publicFingerprint {
-    return _publicKey.hashCode.toRadixString(16); // TODO: should be SHA256
+    return _publicKey.modulus.toRadixString(16).substring(0, 16);
   }
 
-  String get publicKey => _publicKey.toString();
-  String get privateKey => _privateKey.toString();
+  String get publicKey =>
+    _publicKey.modulus.toRadixString(radix) + separator +
+    _publicKey.exponent.toRadixString(radix);
+  String get privateKey =>
+    _privateKey.modulus.toRadixString(radix) + separator +
+    _privateKey.exponent.toRadixString(radix) + separator +
+    _privateKey.p.toRadixString(radix) + separator +
+    _privateKey.q.toRadixString(radix);
 
   // private
   RSAPublicKey _publicKey;
   RSAPrivateKey _privateKey;
 
   void _init(String publicKey, {String privateKey}) {
-    // TODO: this is a mock
-    final seedSource = Random.secure();
-    final seeds = List<int>.generate(32, (_) => seedSource.nextInt(256));
-    final secureRandom = FortunaRandom();
-    secureRandom.seed(KeyParameter(Uint8List.fromList(seeds)));
-
-    final keyGen = RSAKeyGenerator();
-    keyGen.init(
-      ParametersWithRandom(
-        RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64),
-        secureRandom
-      )
-    );
-    final keyPair = keyGen.generateKeyPair();
-    this._publicKey = keyPair.publicKey;
+    final publicInts = parseBigInts(publicKey);
+    this._publicKey = RSAPublicKey(publicInts[0], publicInts[1]);
     if (privateKey != null) {
-      this._privateKey = keyPair.privateKey;
-    }
-    return;
-
-    // final functionality below
-    final parser = RSAKeyParser();
-    this._publicKey = parser.parse(publicKey);
-    if (privateKey != null) {
-      this._privateKey = parser.parse(privateKey);
+      final privateInts = parseBigInts(privateKey);
+      if (privateInts.take(2).toList() != publicInts.take(2).toList()) {
+        throw ArgumentError('Private and public keys don\'t match');
+      }
+      this._privateKey = RSAPrivateKey(privateInts[0], privateInts[1], privateInts[2], privateInts[3]);
     }
   }
+
+  static const String separator = '#';
+  static const int radix = 16;
+  static List<BigInt> parseBigInts(String separated) =>
+    separated.split(separator).map((x) => BigInt.parse(x, radix: radix)).toList();
 }
