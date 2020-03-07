@@ -86,6 +86,26 @@ class Key {
   RSAPrivateKey _privateKey;
 
   void _init(String publicKey, {String privateKey}) {
+    // TODO: this is a mock
+    final seedSource = Random.secure();
+    final seeds = List<int>.generate(32, (_) => seedSource.nextInt(256));
+    final secureRandom = FortunaRandom();
+    secureRandom.seed(KeyParameter(Uint8List.fromList(seeds)));
+
+    final keyGen = RSAKeyGenerator();
+    keyGen.init(
+      ParametersWithRandom(
+        RSAKeyGeneratorParameters(BigInt.parse('65537'), 4096, 64),
+        secureRandom
+      )
+    );
+    final keyPair = keyGen.generateKeyPair();
+    this._publicKey = keyPair.publicKey;
+    if (privateKey != null) {
+      this._privateKey = keyPair.privateKey;
+    }
+
+    // final functionality below
     final parser = RSAKeyParser();
     this._publicKey = parser.parse(publicKey);
     if (privateKey != null) {
