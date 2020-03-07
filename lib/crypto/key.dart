@@ -29,8 +29,8 @@ class Key {
 
   Key.fromSecureStorage(String databaseKey, String password) {
     final publicKey = "should be read from SQLite"; // TODO
-    final privateKey = "should be read from secure storage";
-    final truePassword = "should be read from secure storage";
+    final privateKey = "very secret private key"; // should be read from secure storage
+    final truePassword = "lemons"; // should be read from secure storage
     if (password != truePassword) {
       throw BadPasswordException();
     }
