@@ -48,7 +48,7 @@ class Key {
     final keyGen = RSAKeyGenerator();
     keyGen.init(
       ParametersWithRandom(
-        RSAKeyGeneratorParameters(BigInt.parse('65537'), 4096, 64),
+        RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64),
         secureRandom
       )
     );
@@ -75,7 +75,7 @@ class Key {
   /// Short identifier for a public key.
   /// Can be safely displayed publicly.
   String get publicFingerprint {
-    return _publicKey.hashCode.toRadixString(16).substring(0, 16);
+    return _publicKey.hashCode.toRadixString(16); // TODO: should be SHA256
   }
 
   String get publicKey => _publicKey.toString();
@@ -95,7 +95,7 @@ class Key {
     final keyGen = RSAKeyGenerator();
     keyGen.init(
       ParametersWithRandom(
-        RSAKeyGeneratorParameters(BigInt.parse('65537'), 256, 64),
+        RSAKeyGeneratorParameters(BigInt.parse('65537'), 2048, 64),
         secureRandom
       )
     );
