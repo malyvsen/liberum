@@ -28,8 +28,9 @@ class Key {
   }
 
   Key.fromSecureStorage(String databaseKey, String password) {
-    final publicKey = Key.generate().publicKey; // TODO: should be read from SQLite
-    final privateKey = Key.generate().privateKey; // TODO: should be read from secure storage
+    final eliminateMe = Key.generate();
+    final publicKey = eliminateMe.publicKey; // TODO: should be read from SQLite
+    final privateKey = eliminateMe.privateKey; // TODO: should be read from secure storage
     final truePassword = 'lemons'; // TODO: should be read from secure storage
     if (password != truePassword) {
       throw BadPasswordException();

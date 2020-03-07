@@ -8,7 +8,7 @@ class Account {
   List<Link> links = <Link>[];
 
   Account.fromPublicData(this.name, String publicKey) {
-    this.key = Key.fromPublicKey(publicKey); // TODO
+    this.key = Key.fromPublicKey(publicKey);
   }
 
   Account.logIn(String fingerprint, String password) {
