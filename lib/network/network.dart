@@ -3,7 +3,7 @@ import 'package:liberum/network/account.dart';
 
 class Network {
   final accounts = <Account>[];
-  Account currentAccount;
+  Account loggedInAccount;
 
   static List<Account> get loggableAccounts {
     return [
@@ -13,7 +13,7 @@ class Network {
   }
 
   Network.logIn(Account account, String password) {
-    this.currentAccount = Account.logIn(account.key.publicFingerprint, password);
+    this.loggedInAccount = Account.logIn(account.key.publicFingerprint, password);
     // TODO: load connections etc
   }
 
