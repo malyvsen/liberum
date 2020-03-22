@@ -1,10 +1,10 @@
 import 'package:liberum/network/account.dart';
 
-class Link {
-  List<Account> accounts;
+
+class SignedLink extends Link {
   List<String> signatures;
 
-  Link(this.accounts, this.signatures, this._validFrom, {bool verify=true}) {
+  SignedLink(accounts, this.signatures, validFrom, {bool verify=true}) : super(accounts, validFrom) {
     if (this.accounts.length != this.signatures.length) {
       throw ArgumentError('Accounts and signatures lists must have the same length');
     }
@@ -17,13 +17,27 @@ class Link {
     }
   }
 
+  DateTime get validUntil => validFrom.add(Duration(days: 30));
+  bool get isValid => DateTime.now().isBefore(this.validUntil);
+}
+
+
+class UnsignedLink extends Link {
+  UnsignedLink(accounts, validFrom) : super(accounts, validFrom);
+  
+  SignedLink sign(List<String> signatures, {bool verify=true}) {
+    return SignedLink(this.accounts, signatures, this._validFrom, verify: verify);
+  }
+}
+
+
+abstract class Link {
+  List<Account> accounts;
+
+  Link(this.accounts, this._validFrom);
+
   DateTime _validFrom;
   DateTime get validFrom => _validFrom;
-
-  DateTime get validUntil => validFrom.add(Duration(days: 30));
-
-  bool get isValid => DateTime.now().isBefore(this.validUntil);
-
 
   String get signable => _accountStrings + '|' + _validFrom.hashCode.toRadixString(16);
   String get _accountStrings => accounts.map((account) => account.key.publicFingerprint).join('|');

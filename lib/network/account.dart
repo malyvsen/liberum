@@ -5,7 +5,7 @@ import 'package:liberum/network/link.dart';
 class Account {
   String name;
   Key key;
-  List<Link> links = <Link>[];
+  List<SignedLink> links = <SignedLink>[];
 
   Account(this.name, {Key key}) {
     // TODO: generate key if needed
