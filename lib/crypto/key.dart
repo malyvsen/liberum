@@ -6,7 +6,7 @@ import 'package:pointycastle/asymmetric/api.dart'
 show RSAPrivateKey, RSAPublicKey;
 
 import 'package:encrypt/encrypt.dart'
-show RSAKeyParser, RSASignDigest, RSASigner, Signer;
+show RSASignDigest, RSASigner, Signer;
 
 import 'package:pointycastle/export.dart'
 show FortunaRandom, KeyParameter, ParametersWithRandom, RSAKeyGenerator, RSAKeyGeneratorParameters;
