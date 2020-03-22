@@ -1,4 +1,5 @@
 import 'package:liberum/crypto/key.dart';
+import 'package:liberum/crypto/password.dart';
 import 'package:liberum/network/account.dart';
 
 class Network {
@@ -12,17 +13,24 @@ class Network {
     ]; // TODO: this is a mock
   }
 
-  Network.logIn(Account account, String password) {
-    this.loggedInAccount = Account.logIn(account.key.publicFingerprint, password);
+  Network.create(Account account, Password password) {
+    // TODO: initialize the stuffsies
+  }
+
+  Network.logIn(Account account, Password password) {
+    if (password != Password.load(account.key.publicFingerprint)) {
+      throw BadPasswordException();
+    }
+    this.loggedInAccount = Account.logIn(account.key.publicFingerprint);
     // TODO: load connections etc
   }
 
-  void logOut() {
+  // used during synchronization
+  Network.merge(Network a, Network b) {
     // TODO
   }
 
-  // used during synchronization
-  void merge(Network other) {
+  void save() {
     // TODO
   }
 }

@@ -22,19 +22,15 @@ class Key {
     this._init(publicKey, privateKey: privateKey);
   }
 
-  Key.fromStorage(String databaseKey) {
+  Key.fromStorage(String publicFingerprint) {
     final publicKey = "should be read from SQLite"; // TODO
     this._init(publicKey);
   }
 
-  Key.fromSecureStorage(String databaseKey, String password) {
+  Key.fromSecureStorage(String publicFingerprint) {
     final eliminateMe = Key.generate();
     final publicKey = eliminateMe.publicKey; // TODO: should be read from SQLite
     final privateKey = eliminateMe.privateKey; // TODO: should be read from secure storage
-    final truePassword = 'lemons'; // TODO: should be read from secure storage
-    if (password != truePassword) {
-      throw BadPasswordException();
-    }
     this._init(publicKey, privateKey: privateKey);
   }
 
