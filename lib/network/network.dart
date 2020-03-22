@@ -21,7 +21,7 @@ class Network {
   Network.fromJson(Map<String, dynamic> json) {
     this.loggedInAccount = Account.fromJson(json['loggedInAccount']);
      // json['accounts'] is a string which can be further decoded as a list of maps, each of which can be further decoded as an account
-    this.accounts = jsonDecode(json['accounts']).map((accountJson) => Account.fromJson(accountJson));
+    this.accounts = jsonDecode(json['accounts']).map((accountJson) => Account.fromJson(accountJson)).toList();
     // TODO: serialize links, identifying accounts by their fingerprint
   }
 
