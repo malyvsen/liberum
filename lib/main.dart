@@ -6,6 +6,7 @@ import 'package:liberum/frontend/landing/main.dart';
 import 'package:liberum/frontend/landing/pin.dart';
 
 import 'package:liberum/network/account.dart';
+import 'package:liberum/crypto/password.dart';
 import 'package:liberum/network/network.dart';
 
 class AccountModel extends ChangeNotifier {
@@ -14,7 +15,8 @@ class AccountModel extends ChangeNotifier {
   Network network;
 
   /// An unmodifiable view of the items in the cart.
-  void login(password) {
+  void login(String passwordString) {
+    Password password = Password(passwordString);
     network = Network.logIn(loginAccount, password);
     notifyListeners();
   }
@@ -37,7 +39,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/landing',
       routes: {
         // When navigating to the "/" route, build the FirstScreen widget.
-        '/pin': (context) => PasswordScreen(),
+        '/pin': (context) => EmojiPinScreen(),
         '/landing': (context) => LandingScreen(),
         // When navigating to the "/second" route, build the SecondScreen widget.
         '/': (context) => HomeScreen(),
