@@ -18,6 +18,7 @@ environment:
 
 dependencies:
   flutter_blue: ^0.6.3+1
+  sqflite: ^0.13.0
   flutter:
     sdk: flutter
 
