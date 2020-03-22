@@ -3,7 +3,7 @@ import 'package:liberum/crypto/password.dart';
 import 'package:liberum/network/account.dart';
 
 class Network {
-  final accounts = <Account>[];
+  List<Account> accounts = <Account>[];
   Account loggedInAccount;
 
   static List<Account> get loggableAccounts {
@@ -13,7 +13,7 @@ class Network {
     ]; // TODO: this is a mock
   }
 
-  Network.create(Account account, Password password) {
+  Network(this.loggedInAccount) {
     // TODO: initialize the stuffsies
   }
 
