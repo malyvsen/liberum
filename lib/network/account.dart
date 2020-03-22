@@ -15,16 +15,17 @@ class Account {
     this.key = Key.fromPublicKey(publicKey);
   }
 
-  Account.logIn(String fingerprint) {
-    this.name = 'Cave Johnson'; // TODO: load from storage
-    this.key = Key.fromSecureStorage(fingerprint);
+  Account.fromJson(Map<String, dynamic> json) {
+    this.name = json['name'];
+    this.key = Key.fromJson(json['key']);
   }
 
-  Account.load(String fingerprint) {
-    this.name = 'Boris Johnson'; // TODO: load from storage
-  }
+  Map<String, dynamic> toJson() => {
+    'name': this.name,
+    'key': this.key.toJson()
+  };
 
   double getTrustOf(Account other) {
-    return 0.5; // TODO
+    return 0.5; // TODO: trust allocation algorithm
   }
 }

@@ -1,4 +1,3 @@
-import 'package:liberum/crypto/password.dart' show BadPasswordException;
 import 'dart:math' show Random;
 import 'dart:typed_data' show Uint8List;
 
@@ -22,18 +21,6 @@ class Key {
     this._init(publicKey, privateKey: privateKey);
   }
 
-  Key.fromStorage(String publicFingerprint) {
-    final publicKey = "should be read from SQLite"; // TODO
-    this._init(publicKey);
-  }
-
-  Key.fromSecureStorage(String publicFingerprint) {
-    final eliminateMe = Key.generate();
-    final publicKey = eliminateMe.publicKey; // TODO: should be read from SQLite
-    final privateKey = eliminateMe.privateKey; // TODO: should be read from secure storage
-    this._init(publicKey, privateKey: privateKey);
-  }
-
   /// Securely generate a two-way key.
   /// Takes several seconds, call asynchronously!
   Key.generate() {
@@ -52,6 +39,22 @@ class Key {
     final keyPair = keyGen.generateKeyPair();
     this._publicKey = keyPair.publicKey;
     this._privateKey = keyPair.privateKey;
+  }
+
+  Key.fromJson(Map<String, dynamic> json) {
+    final String publicKey = json['publicKey'];
+    final String privateKey = json.containsKey('privateKey') ? json['privateKey'] : null;
+    this._init(publicKey, privateKey: privateKey);
+  }
+
+  Map<String, dynamic> toJson() {
+    final result = {
+      'publicKey': this.publicKey
+    };
+    if (this._privateKey != null) {
+      result['privateKey'] = this.privateKey;
+    }
+    return result;
   }
 
   String sign(String plainText) => Signer(

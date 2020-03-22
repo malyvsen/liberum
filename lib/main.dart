@@ -10,14 +10,12 @@ import 'package:liberum/crypto/password.dart';
 import 'package:liberum/network/network.dart';
 
 class AccountModel extends ChangeNotifier {
-  /// Internal, private state of the cart.
   Account loginAccount;
   Network network;
 
-  /// An unmodifiable view of the items in the cart.
   void login(String passwordString) {
     Password password = Password(passwordString);
-    network = Network.logIn(loginAccount, password);
+    network = Network.logIn(loginAccount, password); // TODO: replace this with Persistence.logIn() or similar
     notifyListeners();
   }
 
